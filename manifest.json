@@ -1,0 +1,15 @@
+{
+  "name": "Premi Speciali",
+  "short_name": "Premi",
+  "start_url": "premi-speciali.html",
+  "display": "standalone",
+  "background_color": "#DCD6CA",
+  "theme_color": "#DCD6CA",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
