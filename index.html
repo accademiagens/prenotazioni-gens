@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Prenotazioni Gens</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta name="theme-color" content="#DCD6CA">
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 1rem; background: #f9f9f9; }
+    body { font-family: sans-serif; margin: 0; padding: 1rem; background: #DCD6CA; }
     h1 { font-size: 1.5rem; margin-bottom: 1rem; }
     .nav { display: flex; justify-content: space-between; margin-bottom: 1rem; }
     .nav button { padding: 0.5rem 1rem; font-size: 1rem; }
@@ -14,7 +17,8 @@
     .list-section h2 { margin-top: 0; margin-bottom: 0.5rem; }
     ul { list-style: none; padding-left: 0; margin: 0; }
     li { padding: 0.3rem 0; }
-    .name { color: #007bff; cursor: pointer; text-decoration: underline; }
+    .name { color: #000; cursor: pointer; text-decoration: none; }
+    .name:hover { text-decoration: underline; }
     .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
     .modal-content { background: white; padding: 1.5rem; border-radius: 8px; max-width: 400px; width: 90%; position: relative; }
     .modal-close { position: absolute; top: 0.3rem; right: 0.5rem; font-size: 1.5rem; font-weight: bold; cursor: pointer; }
@@ -732,46 +736,36 @@ const allData = {
   ],
 };
 function renderDay(dateStr) {
+  const data = allData[dateStr] || [];
+  const countPresente = data.filter(p => p.presente).length;
+  const countPranzo = data.filter(p => p.pranzo).length;
+  const countLecciona = data.filter(p => p.lecciona && !p.versiliana).length;
+  const countVersiliana = data.filter(p => p.versiliana).length;
   document.getElementById('current-date').textContent = dateStr;
   document.getElementById('content').innerHTML = '' +
-    '<div class="list-section"><h2>Mattina Lecciona (<span id="count-mattina">0</span>)</h2><ul id="list-mattina"></ul></div>' +
-    '<div class="list-section"><h2>Pranzo (<span id="count-pranzo">0</span>)</h2><ul id="list-pranzo"></ul></div>' +
-    '<div class="list-section"><h2>Pomeriggio Lecciona (<span id="count-lecciona">0</span>)</h2><ul id="list-lecciona"></ul></div>' +
-    '<div class="list-section"><h2>Pomeriggio Versiliana (<span id="count-versiliana">0</span>)</h2><ul id="list-versiliana"></ul></div>';
-  const listMattina = document.getElementById('list-mattina');
+    '<div class="list-section"><h2>Mattina Lecciona ('+countPresente+')</h2><ul id="list-presente"></ul></div>' +
+    '<div class="list-section"><h2>Pranzo ('+countPranzo+')</h2><ul id="list-pranzo"></ul></div>' +
+    '<div class="list-section"><h2>Pomeriggio Lecciona ('+countLecciona+')</h2><ul id="list-lecciona"></ul></div>' +
+    '<div class="list-section"><h2>Pomeriggio Versiliana ('+countVersiliana+')</h2><ul id="list-versiliana"></ul></div>';
+  const listPresente = document.getElementById('list-presente');
   const listPranzo = document.getElementById('list-pranzo');
   const listLecciona = document.getElementById('list-lecciona');
   const listVersiliana = document.getElementById('list-versiliana');
-  const data = allData[dateStr] || [];
-  let countMattina = 0;
-  let countPranzo = 0;
-  let countLecciona = 0;
-  let countVersiliana = 0;
-  data.forEach(p => {
+  function createListItem(p) {
     const li = document.createElement('li');
-    li.innerHTML = '<span class="name">' + p.nick + '</span>';
-    li.querySelector('.name').onclick = () => showModal(p);
-    if (p.presente) {
-      listMattina.appendChild(li.cloneNode(true));
-      countMattina++;
-    }
-    if (p.pranzo) {
-      listPranzo.appendChild(li.cloneNode(true));
-      countPranzo++;
-    }
-    if (p.lecciona && !p.versiliana) {
-      listLecciona.appendChild(li.cloneNode(true));
-      countLecciona++;
-    }
-    if (p.versiliana) {
-      listVersiliana.appendChild(li.cloneNode(true));
-      countVersiliana++;
-    }
+    const span = document.createElement('span');
+    span.className = 'name';
+    span.textContent = p.nick;
+    span.onclick = () => showModal(p);
+    li.appendChild(span);
+    return li;
+  }
+  data.forEach(p => {
+    if (p.presente) listPresente.appendChild(createListItem(p));
+    if (p.pranzo) listPranzo.appendChild(createListItem(p));
+    if (p.lecciona && !p.versiliana) listLecciona.appendChild(createListItem(p));
+    if (p.versiliana) listVersiliana.appendChild(createListItem(p));
   });
-  document.getElementById('count-mattina').textContent = countMattina;
-  document.getElementById('count-pranzo').textContent = countPranzo;
-  document.getElementById('count-lecciona').textContent = countLecciona;
-  document.getElementById('count-versiliana').textContent = countVersiliana;
 }
 function showModal(p) {
   document.getElementById('modal-title').textContent = p.nick;
