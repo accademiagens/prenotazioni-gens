@@ -37,7 +37,8 @@
       <p><strong>Nome e Cognome:</strong> <span id="modal-nome"></span></p>
       <p><strong>Telefono:</strong> <span id="modal-tel"></span></p>
       <p><strong>Note:</strong> <span id="modal-note"></span></p>
-    </div></div>
+    </div>
+  </div>
 <script>
 const allData = {
   "09/06/2025": [
@@ -720,7 +721,7 @@ function renderDay(dateStr) {
     li.querySelector('.name').onclick = () => showModal(p);
     if (p.presente) listPresente.appendChild(li.cloneNode(true));
     if (p.pranzo) listPranzo.appendChild(li.cloneNode(true));
-    if (p.lecciona) listLecciona.appendChild(li.cloneNode(true));
+    if (p.lecciona && !p.versiliana) listLecciona.appendChild(li.cloneNode(true));
     if (p.versiliana) listVersiliana.appendChild(li.cloneNode(true));
   });
 }
@@ -732,15 +733,20 @@ function showModal(p) {
   document.getElementById('modal').style.display = 'flex';
 }
 document.getElementById('modal-close').onclick = () => { document.getElementById('modal').style.display = 'none'; };
+function getToday() {
+  const t = new Date();
+  return ('0'+t.getDate()).slice(-2)+'/'+('0'+(t.getMonth()+1)).slice(-2)+'/'+t.getFullYear();
+}
 const dates = Object.keys(allData).sort((a,b) => {
-  const pa = a.split('/').reverse().join();
-  const pb = b.split('/').reverse().join();
-  return pa.localeCompare(pb);
+  const [da, ma, ya] = a.split('/').map(Number);
+  const [db, mb, yb] = b.split('/').map(Number);
+  return new Date(ya, ma-1, da) - new Date(yb, mb-1, db);
 });
-let currentIndex = dates.findIndex(d => d === getToday()) >= 0 ? dates.findIndex(d => d === getToday()) : 0;
-function getToday() { const t = new Date(); return ('0'+t.getDate()).slice(-2)+'/'+('0'+(t.getMonth()+1)).slice(-2)+'/'+t.getFullYear(); }
+let today = getToday();
+let currentIndex = dates.indexOf(today);
+if (currentIndex === -1) currentIndex = dates.length - 1;
 document.getElementById('prev-day').onclick = () => { if (currentIndex > 0) renderDay(dates[--currentIndex]); };
-document.getElementById('next-day').onclick = () => { if (currentIndex < dates.length -1) renderDay(dates[++currentIndex]); };
+document.getElementById('next-day').onclick = () => { if (currentIndex < dates.length - 1) renderDay(dates[++currentIndex]); };
 renderDay(dates[currentIndex]);
 </script>
 </body></html>
