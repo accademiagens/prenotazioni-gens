@@ -787,6 +787,11 @@ function getToday() {
   const t = new Date();
   return ('0'+t.getDate()).slice(-2)+'/'+('0'+(t.getMonth()+1)).slice(-2)+'/'+t.getFullYear();
 }
+function getDayName(dateStr) {
+  const [d, m, y] = dateStr.split('/').map(Number); 
+  const dt = new Date(y, m - 1, d); 
+  return dt.toLocaleDateString('it-IT', { weekday: 'long' }); 
+}
 function shiftDate(dateStr, days) {
   const [d, m, y] = dateStr.split('/').map(Number);
   const dt = new Date(y, m-1, d);
@@ -808,7 +813,7 @@ function showDate(dateStr) {
   if (allData[dateStr] && allData[dateStr].length > 0) {
     renderDay(dateStr);
   } else if (isWeekend(dateStr)) {
-    document.getElementById('current-date').textContent = dateStr;
+    document.getElementById('current-date').textContent = dateStr + ' ' + getDayName(dateStr);
     showClosed();
   } else {
     let idx = dates.indexOf(dateStr);
