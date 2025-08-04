@@ -741,7 +741,7 @@ function renderDay(dateStr) {
   const countPranzo = data.filter(p => p.pranzo).length;
   const countLecciona = data.filter(p => p.lecciona && !p.versiliana).length;
   const countVersiliana = data.filter(p => p.versiliana).length;
-  document.getElementById('current-date').textContent = dateStr;
+  document.getElementById('current-date').textContent = dateStr + ' ' + getDayName(dateStr);
   document.getElementById('content').innerHTML = '' +
     '<div class="list-section"><h2>Mattina Lecciona ('+countPresente+')</h2><ul id="list-presente"></ul></div>' +
     '<div class="list-section"><h2>Pranzo ('+countPranzo+')</h2><ul id="list-pranzo"></ul></div>' +
