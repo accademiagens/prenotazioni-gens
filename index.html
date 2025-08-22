@@ -781,6 +781,17 @@ const allData = {
     { nick: "Rock And Roll ", nome: "Leone Pistolesi Donadello", anni: "8", tel: "3281591551", note: "Colloquio con psicologa per lieve ritardo cognitivo  ", presente: true, pranzo: true, lecciona: false, versiliana: false },
   ],
 };
+const allExtraEvents = {
+  "22/08/2025": [
+    { nick: "Aquila Nera", nome: "Cosimo Rotolo", anni: "12", tel: "3932924823", note: "", activity: "notturna", time: "17:30", confirmed: true },
+    { nick: "Cucciolo di Volpe", nome: "Ulisse Caprili", anni: "6", tel: "3282925169", note: "Non siamo ancora andati al mare quest’anno é non sono in grado di rispondere con esattezza su quanto sia capace di nuotare. mi informerò con il suo istruttore di piscina", activity: "notturna", time: "17:30", confirmed: true },
+    { nick: "Pesce Selvaggio", nome: "Jacopo Albiani", anni: "12", tel: "3358036181", note: "Jacopo è un bimbo che si distrae molto facilmente (certificato Bes)  ", activity: "notturna", time: "17:30", confirmed: true },
+    { nick: "Piccolo Ninjia", nome: "Alessandro Granucci", anni: "8", tel: "3474884494", note: "", activity: "notturna", time: "17:30", confirmed: true },
+    { nick: "Prusik", nome: "Matteo Biagi", anni: "11", tel: "3492919896", note: "Matteo e’ un bambino con diagnosi di Dsa (disturbo di apprendimento). durante l’ultimo anno scolastico il bambino e’ stato vittima di percosse ed esclusione da parte di alcuni compagni percui abbiamo intrapreso un percorso psicologico che è tuttora in corso", activity: "notturna", time: "17:30", confirmed: true },
+    { nick: "Sole Ardente", nome: "Matteo Brocchini", anni: "11", tel: "3280553825 ", note: "Matteo ha l'ADHD tourette ed è oppositivo.È un bambino consapevole delle sue difficoltà. molto sensibile ed empatico. Ha difficoltà a creare una relazione con i suoi pari ma è molto socievole e predisposto verso gli altri", activity: "notturna", time: "17:30", confirmed: true },
+    { nick: "Terminator", nome: "Samuele Franchi", anni: "10", tel: "3403463091", note: "Sport subacquei con bombole o apnea  a causa di forame pervio aperto non ha nessun problema a fare sport ma non può praticare attività dove la pressione sanguigna viene modificata velocemente", activity: "notturna", time: "17:30", confirmed: true },
+  ],
+};
 function renderDay(dateStr) {
   const data = allData[dateStr] || [];
   const countPresente = data.filter(p => p.presente).length;
@@ -812,6 +823,7 @@ function renderDay(dateStr) {
     if (p.lecciona && !p.versiliana) listLecciona.appendChild(createListItem(p));
     if (p.versiliana) listVersiliana.appendChild(createListItem(p));
   });
+  renderExtraEvents(dateStr);
 }
 function showModal(p) {
   document.getElementById('modal-title').textContent = p.nick;
@@ -872,6 +884,26 @@ function showDate(dateStr) {
       shownDate = fallback;
     }
   }
+}
+function renderExtraEvents(dateStr) {
+  const events = allExtraEvents[dateStr] || [];
+  if (events.length === 0) return '';
+  const grouped = {};
+  events.forEach(e => {
+    const key = e.activity + ' ore ' + e.time + (e.confirmed ? ' (Confermato: Si)' : ' (Confermato: No)');
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(e);
+  });
+  let html = '<div class="list-section"><h2>Eventi Extra</h2>';
+  for (const [eventKey, participants] of Object.entries(grouped)) {
+    html += '<h3>'+eventKey+'</h3><ul>';
+    participants.forEach(p => {
+      html += '<li><span class="name" onclick="showModal('+JSON.stringify(p)+')">'+p.nick+'</span></li>';
+    });
+    html += '</ul>';
+  }
+  html += '</div>';
+  document.getElementById('content').innerHTML += html;
 }
 if (isWeekend(today) && !hasTodayData) {
   showDate(today);
