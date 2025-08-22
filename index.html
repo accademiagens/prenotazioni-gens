@@ -887,23 +887,31 @@ function showDate(dateStr) {
 }
 function renderExtraEvents(dateStr) {
   const events = allExtraEvents[dateStr] || [];
-  if (events.length === 0) return '';
+  if (events.length === 0) return;
   const grouped = {};
   events.forEach(e => {
     const key = e.activity + ' ore ' + e.time + (e.confirmed ? ' (Confermato: Si)' : ' (Confermato: No)');
     if (!grouped[key]) grouped[key] = [];
     grouped[key].push(e);
   });
-  let html = '<div class="list-section"><h2>Eventi Extra</h2>';
+  const container = document.createElement('div');
+  container.className = 'list-section';
+  const h2 = document.createElement('h2'); h2.textContent = 'Eventi Extra'; container.appendChild(h2);
   for (const [eventKey, participants] of Object.entries(grouped)) {
-    html += '<h3>'+eventKey+'</h3><ul>';
+    const h3 = document.createElement('h3'); h3.textContent = eventKey; container.appendChild(h3);
+    const ul = document.createElement('ul');
     participants.forEach(p => {
-      html += '<li><span class="name" onclick="showModal('+JSON.stringify(p)+')">'+p.nick+'</span></li>';
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.className = 'name';
+      span.textContent = p.nick;
+      span.onclick = () => showModal(p);
+      li.appendChild(span);
+      ul.appendChild(li);
     });
-    html += '</ul>';
+    container.appendChild(ul);
   }
-  html += '</div>';
-  document.getElementById('content').innerHTML += html;
+  document.getElementById('content').appendChild(container);
 }
 if (isWeekend(today) && !hasTodayData) {
   showDate(today);
