@@ -788,8 +788,30 @@ const allData = {
     { nick: "Aquila Nera", nome: "Cosimo Rotolo", anni: "12", tel: "3932924823", note: "", presente: true, pranzo: true, lecciona: false, versiliana: false },
     { nick: "Cucciolo di Riccio ", nome: "Niccolò D'alessandro", anni: "7", tel: "3381248567", note: "Pelle molto chiara- necessita di protezione solare ", presente: true, pranzo: true, lecciona: false, versiliana: false },
     { nick: "Cucciolo di Volpe", nome: "Ulisse Caprili", anni: "6", tel: "3282925169", note: "Non siamo ancora andati al mare quest’anno é non sono in grado di rispondere con esattezza su quanto sia capace di nuotare. mi informerò con il suo istruttore di piscina", presente: true, pranzo: false, lecciona: false, versiliana: false },
-    { nick: "Panzanella", nome: "Diana Pistolesi", anni: "4", tel: "3281591551", note: "nessuna", presente: true, pranzo: true, lecciona: false, versiliana: false },
-    { nick: "Rock And Roll ", nome: "Leone Pistolesi Donadello", anni: "8", tel: "3281591551", note: "Colloquio con psicologa per lieve ritardo cognitivo  ", presente: true, pranzo: true, lecciona: false, versiliana: false },
+    { nick: "Panzanella", nome: "Diana Pistolesi", anni: "4", tel: "3281591551", note: "nessuna", presente: false, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Rock And Roll ", nome: "Leone Pistolesi Donadello", anni: "8", tel: "3281591551", note: "Colloquio con psicologa per lieve ritardo cognitivo  ", presente: false, pranzo: false, lecciona: false, versiliana: false },
+  ],
+  "04/10/2025": [
+    { nick: "Cucciolo di Riccio ", nome: "Niccolò D'alessandro", anni: "7", tel: "3381248567", note: "Pelle molto chiara- necessita di protezione solare ", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Giaguaro Silenzioso ", nome: "Gregorio Pardini", anni: "7", tel: "3332966516", note: "", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Panda rosso ", nome: "Gabriele Di Franco", anni: "6", tel: "3331824751", note: "", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Serpente Infuocato ", nome: "Saverio Fisichella", anni: "9", tel: "3461031199", note: "", presente: true, pranzo: false, lecciona: false, versiliana: false },
+  ],
+  "11/10/2025": [
+    { nick: "Cucciolo di Riccio ", nome: "Niccolò D'alessandro", anni: "7", tel: "3381248567", note: "Pelle molto chiara- necessita di protezione solare ", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Prusik", nome: "Matteo Biagi", anni: "11", tel: "3492919896", note: "Matteo e’ un bambino con diagnosi di Dsa (disturbo di apprendimento). durante l’ultimo anno scolastico il bambino e’ stato vittima di percosse ed esclusione da parte di alcuni compagni percui abbiamo intrapreso un percorso psicologico che è tuttora in corso", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Serpente Infuocato ", nome: "Saverio Fisichella", anni: "9", tel: "3461031199", note: "", presente: true, pranzo: false, lecciona: false, versiliana: false },
+  ],
+  "18/10/2025": [
+    { nick: "Cucciolo di Riccio ", nome: "Niccolò D'alessandro", anni: "7", tel: "3381248567", note: "Pelle molto chiara- necessita di protezione solare ", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Giaguaro Silenzioso ", nome: "Gregorio Pardini", anni: "7", tel: "3332966516", note: "", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Prusik", nome: "Matteo Biagi", anni: "11", tel: "3492919896", note: "Matteo e’ un bambino con diagnosi di Dsa (disturbo di apprendimento). durante l’ultimo anno scolastico il bambino e’ stato vittima di percosse ed esclusione da parte di alcuni compagni percui abbiamo intrapreso un percorso psicologico che è tuttora in corso", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Serpente Infuocato ", nome: "Saverio Fisichella", anni: "9", tel: "3461031199", note: "", presente: true, pranzo: false, lecciona: false, versiliana: false },
+  ],
+  "25/10/2025": [
+    { nick: "Cucciolo di Riccio ", nome: "Niccolò D'alessandro", anni: "7", tel: "3381248567", note: "Pelle molto chiara- necessita di protezione solare ", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Prusik", nome: "Matteo Biagi", anni: "11", tel: "3492919896", note: "Matteo e’ un bambino con diagnosi di Dsa (disturbo di apprendimento). durante l’ultimo anno scolastico il bambino e’ stato vittima di percosse ed esclusione da parte di alcuni compagni percui abbiamo intrapreso un percorso psicologico che è tuttora in corso", presente: true, pranzo: false, lecciona: false, versiliana: false },
+    { nick: "Serpente Infuocato ", nome: "Saverio Fisichella", anni: "9", tel: "3461031199", note: "", presente: true, pranzo: false, lecciona: false, versiliana: false },
   ],
 };
 const allExtraEvents = {
@@ -909,18 +931,9 @@ function showDate(dateStr) {
   shownDate = dateStr;
   if (allData[dateStr] && allData[dateStr].length > 0) {
     renderDay(dateStr);
-  } else if (isWeekend(dateStr)) {
-    document.getElementById('current-date').textContent = dateStr + ' ' + getDayName(dateStr);
-    showClosed();
   } else {
-    let idx = dates.indexOf(dateStr);
-    if (idx !== -1) {
-      renderDay(dateStr);
-    } else {
-      let fallback = dates.length > 0 ? dates[dates.length-1] : dateStr;
-      renderDay(fallback);
-      shownDate = fallback;
-    }
+    // nessuna prenotazione per questa data, mostra comunque la giornata vuota
+    renderDay(dateStr);
   }
 }
 function renderExtraEvents(dateStr) {
@@ -951,13 +964,7 @@ function renderExtraEvents(dateStr) {
   }
   document.getElementById('content').appendChild(container);
 }
-if (isWeekend(today) && !hasTodayData) {
-  showDate(today);
-} else if (!hasTodayData) {
-  showDate(dates[currentIndex]);
-} else {
-  showDate(today);
-}
+showDate(today);
 document.getElementById('prev-day').onclick = () => {
   showDate(shiftDate(shownDate, -1));
 };
