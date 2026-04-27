@@ -1206,10 +1206,15 @@ const dates = Object.keys(allData).sort((a,b) => {
   const [db, mb, yb] = b.split('/').map(Number);
   return new Date(ya, ma-1, da) - new Date(yb, mb-1, db);
 });
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
 let today = getToday();
-let shownDate = today;
-let hasTodayData = allData[today] && allData[today].length > 0;
-let currentIndex = dates.indexOf(today);
+let paramDate = getQueryParam('date');
+let shownDate = paramDate ? paramDate : today;
+let hasTodayData = allData[shownDate] && allData[shownDate].length > 0;
+let currentIndex = dates.indexOf(shownDate);
 if (currentIndex === -1) currentIndex = dates.length - 1;
 function showDate(dateStr) {
   shownDate = dateStr;
@@ -1248,7 +1253,7 @@ function renderExtraEvents(dateStr) {
   }
   document.getElementById('content').appendChild(container);
 }
-showDate(today);
+showDate(shownDate);
 document.getElementById('prev-day').onclick = () => {
   showDate(shiftDate(shownDate, -1));
 };
