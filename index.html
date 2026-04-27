@@ -1088,4 +1088,57 @@ function renderDay(dateStr) {
     '<div class="list-section"><h2>Mattina Lecciona ('+countPresente+')</h2><ul id="list-presente"></ul></div>' +
     '<div class="list-section"><h2>Rifugio dei Folletti ('+countGoblins+')</h2><ul id="list-goblins"></ul></div>' +
     '<div class="list-section"><h2>Pranzo ('+countPranzo+')</h2><ul id="list-pranzo"></ul></div>' +
-    '<div class="list-section"><h2>Pomeriggio Lecciona ('+countLecciona+')</h2><ul id="l
+    '<div class="list-section"><h2>Pomeriggio Lecciona ('+countLecciona+')</h2><ul id="list-lecciona"></ul></div>' +
+    '<div class="list-section"><h2>Pomeriggio Versiliana ('+countVersiliana+')</h2><ul id="list-versiliana"></ul></div>';
+  const listPresente = document.getElementById('list-presente');
+  const listGoblins = document.getElementById('list-goblins');
+  const listPranzo = document.getElementById('list-pranzo');
+  const listLecciona = document.getElementById('list-lecciona');
+  const listVersiliana = document.getElementById('list-versiliana');
+  function createListItem(p) {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.className = 'name';
+    span.textContent = p.nick;
+    span.onclick = () => showModal(p);
+    li.appendChild(span);
+    return li;
+  }
+  data.forEach(p => {
+    if (p.presente) listPresente.appendChild(createListItem(p));
+    if (p.goblins) listGoblins.appendChild(createListItem(p));
+    if (p.pranzo) listPranzo.appendChild(createListItem(p));
+    if (p.lecciona && !p.versiliana && !p.goblins) listLecciona.appendChild(createListItem(p));
+    if (p.versiliana && !p.goblins) listVersiliana.appendChild(createListItem(p));
+  });
+}
+function getToday() {
+  const t = new Date();
+  return ('0'+t.getDate()).slice(-2)+'/'+('0'+(t.getMonth()+1)).slice(-2)+'/'+t.getFullYear();
+}
+function getDayName(dateStr) {
+  const [d, m, y] = dateStr.split('/').map(Number);
+  const dt = new Date(y, m - 1, d);
+  return dt.toLocaleDateString('it-IT', { weekday: 'long' });
+}
+function shiftDate(dateStr, days) {
+  const [d, m, y] = dateStr.split('/').map(Number);
+  const dt = new Date(y, m-1, d);
+  dt.setDate(dt.getDate() + days);
+  return ('0'+dt.getDate()).slice(-2)+'/'+('0'+(dt.getMonth()+1)).slice(-2)+'/'+dt.getFullYear();
+}
+let today = getToday();
+let shownDate = today;
+function showDate(dateStr) {
+  shownDate = dateStr;
+  renderDay(dateStr);
+}
+showDate(today);
+document.getElementById('prev-day').onclick = () => {
+  showDate(shiftDate(shownDate, -1));
+};
+document.getElementById('next-day').onclick = () => {
+  showDate(shiftDate(shownDate, 1));
+};
+</script>
+</body></html>
